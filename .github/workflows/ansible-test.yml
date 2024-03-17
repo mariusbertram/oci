@@ -101,7 +101,7 @@ jobs:
           ansible-core-version: ${{ matrix.ansible }}
           testing-type: sanity
           pre-test-cmd: >-
-            pip install -r meta/ee-requirements.yml
+            pip install -r requirements.yml
           # OPTIONAL If your sanity tests require code
           # from other collections, install them like this
           # test-deps: >-
