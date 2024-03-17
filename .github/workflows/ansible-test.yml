@@ -38,10 +38,9 @@ on:
       - main
       - stable-*
   pull_request:
-  # Run CI once per day (at 06:00 UTC)
-  # This ensures that even if there haven't been commits that we are still
-  # testing against latest version of ansible-test for each ansible-core
-  # version
+    branches:
+      - main
+      - stable-*
   schedule:
     - cron: '0 6 * * *'
 
@@ -97,6 +96,8 @@ jobs:
         # See the documentation for the following GitHub action on
         # https://github.com/ansible-community/ansible-test-gh-action/blob/main/README.md
         uses: ansible-community/ansible-test-gh-action@v1.14.1
+        pre-test-cmd: >-
+          pip install -r meta/ee-requirements.txt
         with:
           ansible-core-version: ${{ matrix.ansible }}
           testing-type: sanity
@@ -147,6 +148,8 @@ jobs:
         # See the documentation for the following GitHub action on
         # https://github.com/ansible-community/ansible-test-gh-action/blob/main/README.md
         uses: ansible-community/ansible-test-gh-action@v1.14.1
+        pre-test-cmd: >-
+          pip install -r meta/ee-requirements.txt
         with:
           ansible-core-version: ${{ matrix.ansible }}
           testing-type: units

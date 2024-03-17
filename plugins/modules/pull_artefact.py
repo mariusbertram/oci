@@ -7,9 +7,9 @@ __metaclass__ = type
 DOCUMENTATION = r'''
 ---
 module: pull_artefact
-short_description: Pulls and Push an image from an OCI registry
+short_description: Pulls artefact from an OCI registry
 
-version_added: "1.0.0"
+version_added: "0.1.0"
 
 author:
     - Marius Bertram (@mariusbertram)
