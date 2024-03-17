@@ -6,7 +6,7 @@ __metaclass__ = type
 
 DOCUMENTATION = r'''
 ---
-module: oras
+module: pull_artefact
 short_description: Pulls and Push an image from an OCI registry
 
 version_added: "1.0.0"
