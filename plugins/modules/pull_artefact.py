@@ -25,6 +25,7 @@ def run_module():
     module_args = dict(
         username=dict(type='str', default=""),
         password=dict(type='str', default="", no_log=True),
+        auth_cong=dict(type='str', default=""),
         image=dict(type='str', required=True),
         path=dict(type='str', required=False, default=""),
         insecure=dict(type='bool', required=False, default=False)
@@ -36,13 +37,17 @@ def run_module():
 
     username = module.params['username']
     password = module.params['password']
+    auth_config = module.params['auth_config']
     image = module.params['image']
     path = module.params['path']
 
-    client = oras.client.OrasClient(tls_verify=module.params['insecure'])
+    client = oras.client.OrasClient(tls_verify=module.params['insecure'], )
 
-    if username != "":
+    if username != "" and auth_config == "":
         client.set_basic_auth(username, password)
+
+    if auth_config != "":
+        client.login(config_path=auth_config, username=username, password=password)
 
     target_dir = path
 
@@ -53,7 +58,7 @@ def run_module():
 
     artifact = client.pull(target=image)
 
-    return module.exit_json(changed=True, resource=artifact)
+
 
 
 def main():
