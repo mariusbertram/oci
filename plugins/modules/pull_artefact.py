@@ -25,7 +25,7 @@ def run_module():
     module_args = dict(
         username=dict(type='str', default=""),
         password=dict(type='str', default="", no_log=True),
-        auth_cong=dict(type='str', default=""),
+        auth_config=dict(type='str', default=""),
         image=dict(type='str', required=True),
         path=dict(type='str', required=False, default=""),
         insecure=dict(type='bool', required=False, default=False)
@@ -41,24 +41,24 @@ def run_module():
     image = module.params['image']
     path = module.params['path']
 
-    client = oras.client.OrasClient(tls_verify=module.params['insecure'], )
+    client = oras.client.OrasClient(auth_backend="token")
+    client.login(tls_verify=module.params['insecure'], )
 
     if username != "" and auth_config == "":
-        client.set_basic_auth(username, password)
+        client.login(tls_verify=module.params['insecure'], username=username, password=password,
+                     hostname=image.split(":")[0])
 
-    if auth_config != "":
-        client.login(config_path=auth_config, username=username, password=password)
+    else:
+        client.login(config_path=[auth_config],tls_verify=module.params['insecure'], username=username, password=password, hostname=image.split(":")[0])
 
     target_dir = path
 
     if path == "":
         target_dir = tempfile.mkdtemp()
 
-    os.chdir(target_dir)
-
-    artifact = client.pull(target=image)
-
-
+    artifact = client.pull(target=image, outdir=target_dir)
+    result = dict(changed=True, artifacts=artifact)
+    module.exit_json(**result)
 
 
 def main():
